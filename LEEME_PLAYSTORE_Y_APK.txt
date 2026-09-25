@@ -1,0 +1,41 @@
+================================================================================
+PROYECTO ANDROID NATIVO (APK + GOOGLE PLAY STORE AAB) PARA CHATIUX
+================================================================================
+
+URL configurada de tu chat: https://zonadebusqueda.com/chat.php
+Package ID (Play Store)   : com.zonadebusqueda.chatiux
+
+1. ¿MODIFICA MIS ARCHIVOS PHP O MI BASE DE DATOS?
+--------------------------------------------------------------------------------
+NO. Este proyecto Android funciona 100% sobre tu archivo chat.php y login.php
+actuales sin modificar ni una sola línea de código PHP ni la base de datos MySQL.
+
+2. ¿CÓMO FUNCIONA EL INICIO DE SESIÓN Y LAS NOTIFICACIONES?
+--------------------------------------------------------------------------------
+- INICIO DE SESIÓN: Al abrir el APK por primera vez, carga https://zonadebusqueda.com/chat.php.
+  Si el usuario no ha iniciado sesión, chat.php redirige automáticamente a
+  login.php?redirect=chat.php. Al iniciar sesión, CookieManager de Android
+  guarda las cookies PHPSESSID y recordarme en la memoria permanente del teléfono.
+- NOTIFICACIONES EN PRIMER Y SEGUNDO PLANO:
+  a) Cuando el usuario recibe un mensaje o sticker, el puente @JavascriptInterface
+     (AndroidChatiux) dispara una Notificación Nativa de Android con sonido y vibración.
+  b) Además, ChatiuxNotificationService consulta periódicamente:
+     https://zonadebusqueda.com/chat.php?ajax_chat_action=unread_count
+     usando las cookies de tu sesión y muestra la notificación con el nombre del
+     remitente y el mensaje aunque estés en otra app. Al tocar la notificación,
+     abre directamente la conversación con ese contacto.
+
+3. CÓMO OBTENER EL ARCHIVO .APK O .AAB (2 OPCIONES)
+--------------------------------------------------------------------------------
+OPCIÓN A - EN LA NUBE CON GITHUB ACTIONS (SIN INSTALAR ANDROID STUDIO):
+1. Sube todos los archivos de este ZIP a un repositorio en GitHub.
+2. Entra a la pestaña "Actions" de tu repositorio y ejecuta el flujo
+   "Build Chatiux Android APK & Play Store AAB".
+3. Descarga el artefacto "Chatiux-Instalador-APK" (contiene app-debug.apk).
+
+OPCIÓN B - CON ANDROID STUDIO EN TU PC:
+1. Abre Android Studio -> "Open" -> selecciona la carpeta de este proyecto.
+2. Espera a que termine la sincronización de Gradle.
+3. Ve a "Build" -> "Build Bundle(s) / APK(s)" -> "Build APK(s)" para generar tu APK,
+   o "Build" -> "Generate Signed Bundle / APK..." para firmar y subir el .AAB
+   a Google Play Console.
