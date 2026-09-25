@@ -9,9 +9,11 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
 import android.webkit.ValueCallback
@@ -26,6 +28,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 
 class MainActivity : ComponentActivity() {
 
@@ -59,7 +65,30 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Configurar barra superior del sistema (hora, red, batería) y barra inferior
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        window.statusBarColor = Color.parseColor("#0b1120")
+        window.navigationBarColor = Color.parseColor("#060913")
+        WindowInsetsControllerCompat(window, window.decorView).apply {
+            isAppearanceLightStatusBars = false
+            isAppearanceLightNavigationBars = false
+        }
+
         setContentView(R.layout.activity_main)
+
+        // Respetar el margen exacto de la barra de estado superior (hora, red, batería), notch, barra inferior y teclado
+        val rootContainer = findViewById<View>(R.id.rootContainer)
+        ViewCompat.setOnApplyWindowInsetsListener(rootContainer) { view, windowInsets ->
+            val insets = windowInsets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or
+                WindowInsetsCompat.Type.displayCutout() or
+                WindowInsetsCompat.Type.ime()
+            )
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom)
+            WindowInsetsCompat.CONSUMED
+        }
+        ViewCompat.requestApplyInsets(rootContainer)
 
         crearCanalNotificaciones()
         solicitarPermisoNotificaciones()
